@@ -1,0 +1,85 @@
+﻿@model ListTodoViewModel
+
+<div class="row">
+    <div class="col text-center">
+        <h1>@ViewData["Title"]</h1>
+    </div>
+</div>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+
+<div class="row">
+    <div class="col">
+        @if (Model.Todos.Any())
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Título</th>
+                        <th scope="col">Data</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var todo in Model.Todos)
+                    {
+                        <tr class="@(todo.IsCompleted ? "table-success" : "")">
+                            <th scope="row">@todo.Id</th>
+                            <td>@todo.Title</td>
+                            <td>@todo.Date.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (todo.IsCompleted)
+                                {
+                                    <i class="text-success" data-feather="check-square"></i>
+                                    <span class="text-success">Concluída</span>
+                                }
+                                else
+                                {
+                                    <i class="text-warning" data-feather="clock"></i>
+                                    <span class="text-warning">Pendente</span>
+                                }
+                            </td>
+                            <td>
+                                @if (!todo.IsCompleted)
+                                {
+                                    <a asp-controller="Todo" asp-action="Complete" asp-route-id="@todo.Id" class="btn btn-sm btn-success">Completar</a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Todo" asp-action="Complete" asp-route-id="@todo.Id" class="btn btn-sm btn-secondary">Reabrir</a>
+                                }
+                                <a asp-controller="Todo" asp-action="Edit" asp-route-id="@todo.Id" class="btn btn-sm btn-warning">Editar</a>
+                                <a asp-controller="Todo" asp-action="Delete" asp-route-id="@todo.Id"
+                                   onclick="return confirm('Tem certeza que deseja excluir esta tarefa?')"
+                                   class="btn btn-sm btn-danger">
+                                    Excluir
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="alert alert-info text-center">
+                <h4>Nenhuma tarefa encontrada</h4>
+                <p>Que tal criar sua primeira tarefa?</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <a asp-controller="Todo" asp-action="Create" class="btn btn-primary">
+            <i data-feather="plus"></i> Nova Tarefa
+        </a>
+    </div>
+</div>

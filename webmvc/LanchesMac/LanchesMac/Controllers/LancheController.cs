@@ -1,5 +1,7 @@
-﻿using LanchesMac.Repositories;
+﻿using LanchesMac.Models;
+using LanchesMac.Repositories;
 using LanchesMac.Repositories.Interfaces;
+using LanchesMac.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LanchesMac.Controllers
@@ -16,8 +18,18 @@ namespace LanchesMac.Controllers
         // view com o nome do método (List)
         public IActionResult List()
         {
-            var lanches = _lancheRepository.Lanches; // retorna lista de todos lanches
-            return View(lanches);
+            ViewData["Titulo"] = "Todos os Lanches";
+            ViewBag.FeitoPorJulio = "Feito por Juliao Lanches";
+
+            //var lanches = _lancheRepository.Lanches; // retorna lista de todos lanches
+
+            var lanchesListViewModel = new LancheListViewModel();
+            lanchesListViewModel.Lanches = _lancheRepository.Lanches;
+            lanchesListViewModel.CategoriaAtual = "Categoria Atual";
+
+            TempData["QtdeLanche"] = lanchesListViewModel.Lanches.Count();
+
+            return View(lanchesListViewModel);
         }
     }
 }
